@@ -16,12 +16,19 @@ st.set_page_config(
 def load_model():
     try:
         with st.spinner('⏳ Loading model...'):
+            # Import sklearn first (required for unpickling sklearn models)
+            import sklearn
+            
             with open('models.pkl', 'rb') as f:
                 model = pickle.load(f)
         return model
     except FileNotFoundError:
         st.error("❌ Model file 'models.pkl' not found.")
         st.info("Please ensure models.pkl is uploaded to your GitHub repository.")
+        return None
+    except ModuleNotFoundError as e:
+        st.error(f"❌ Missing module: {str(e)}")
+        st.info("Please ensure scikit-learn is in requirements.txt")
         return None
     except Exception as e:
         st.error(f"❌ Error loading model: {str(e)}")
