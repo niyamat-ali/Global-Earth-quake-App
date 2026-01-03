@@ -10,14 +10,13 @@ st.set_page_config(
     layout="wide"
 )
 
-# Load model - SIMPLIFIED VERSION
+# Load model - USE JOBLIB DIRECTLY
 @st.cache_resource
 def load_model():
     try:
         with st.spinner('⏳ Loading model...'):
-            import pickle
-            with open('models.joblib', 'rb') as f:
-                model = pickle.load(f)
+            import joblib
+            model = joblib.load('models.joblib')
             return model
     except FileNotFoundError:
         st.error("❌ Model file 'models.joblib' not found in the repository.")
@@ -25,7 +24,6 @@ def load_model():
         return None
     except Exception as e:
         st.error(f"❌ Error loading model: {str(e)}")
-        st.error("Details: Pickle can read joblib files, but if your model uses joblib-specific features, you may need to add 'joblib' to requirements.txt")
         return None
 
 # Load model
