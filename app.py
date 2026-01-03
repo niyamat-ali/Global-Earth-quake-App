@@ -1,10 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-# Import joblib from sklearn instead
-from sklearn.externals import joblib
-# OR use this alternative:
-# import pickle
+import joblib
 from datetime import datetime
 
 # Page configuration
@@ -19,14 +16,7 @@ st.set_page_config(
 def load_model():
     try:
         with st.spinner('⏳ Loading model...'):
-            # Try joblib first
-            try:
-                from sklearn.externals import joblib
-                model = joblib.load('models.joblib')
-            except:
-                # Fallback to direct joblib import
-                import joblib
-                model = joblib.load('models.joblib')
+            model = joblib.load('models.joblib')
         return model
     except FileNotFoundError:
         st.error("❌ Model file not found. Please check if models.joblib exists.")
