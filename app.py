@@ -2,7 +2,7 @@ import subprocess
 import sys
 
 def install_package(package):
-    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+    subprocess.check_call([sys.executable, "-m", "pip", "install", package])  # FIXED: executable
 
 # Install joblib if not present
 try:
