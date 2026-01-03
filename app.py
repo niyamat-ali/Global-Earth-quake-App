@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import joblib
 from datetime import datetime
 
 # Page configuration
@@ -11,18 +10,39 @@ st.set_page_config(
     layout="wide"
 )
 
-# Load model
+# Load model - FIXED VERSION
 @st.cache_resource
 def load_model():
     try:
         with st.spinner('⏳ Loading model...'):
-            model = joblib.load('models.joblib')
-        return model
+            # Method 1: Try pickle first (works with .joblib files)
+            try:
+                import pickle
+                with open('models.joblib', 'rb') as f:
+                    model = pickle.load(f)
+                return model
+            except Exception as e1:
+                # Method 2: Try joblib as fallback
+                try:
+                    import joblib
+                    model = joblib.load('models.joblib')
+                    return model
+                except ImportError as e2:
+                    st.error(f"❌ Import Error: {str(e2)}")
+                    st.info("Installing joblib...")
+                    import subprocess
+                    import sys
+                    subprocess.check_call([sys.executable, "-m", "pip", "install", "joblib"])
+                    import joblib
+                    model = joblib.load('models.joblib')
+                    return model
     except FileNotFoundError:
-        st.error("❌ Model file not found. Please check if models.joblib exists.")
+        st.error("❌ Model file 'models.joblib' not found in the repository.")
+        st.info("Please ensure models.joblib is uploaded to your GitHub repository.")
         return None
     except Exception as e:
         st.error(f"❌ Error loading model: {str(e)}")
+        st.exception(e)
         return None
 
 # Load model
