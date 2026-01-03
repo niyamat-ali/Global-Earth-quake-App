@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import pickle
 from datetime import datetime
 
 # Page configuration
@@ -10,17 +11,17 @@ st.set_page_config(
     layout="wide"
 )
 
-# Load model - USE JOBLIB DIRECTLY
+# Load model
 @st.cache_resource
 def load_model():
     try:
         with st.spinner('⏳ Loading model...'):
-            import joblib
-            model = joblib.load('models.joblib')
-            return model
+            with open('models.pkl', 'rb') as f:
+                model = pickle.load(f)
+        return model
     except FileNotFoundError:
-        st.error("❌ Model file 'models.joblib' not found in the repository.")
-        st.info("Please ensure models.joblib is uploaded to your GitHub repository.")
+        st.error("❌ Model file 'models.pkl' not found.")
+        st.info("Please ensure models.pkl is uploaded to your GitHub repository.")
         return None
     except Exception as e:
         st.error(f"❌ Error loading model: {str(e)}")
