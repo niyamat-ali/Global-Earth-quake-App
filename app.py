@@ -1,20 +1,10 @@
-import subprocess
-import sys
-
-def install_package(package):
-    subprocess.check_call([sys.executable, "-m", "pip", "install", package])  # FIXED: executable
-
-# Install joblib if not present
-try:
-    import joblib
-except ImportError:
-    install_package('joblib')
-    import joblib
-
 import streamlit as st
 import pandas as pd
 import numpy as np
-import joblib
+# Import joblib from sklearn instead
+from sklearn.externals import joblib
+# OR use this alternative:
+# import pickle
 from datetime import datetime
 
 # Page configuration
@@ -29,7 +19,14 @@ st.set_page_config(
 def load_model():
     try:
         with st.spinner('⏳ Loading model...'):
-            model = joblib.load('models.joblib')
+            # Try joblib first
+            try:
+                from sklearn.externals import joblib
+                model = joblib.load('models.joblib')
+            except:
+                # Fallback to direct joblib import
+                import joblib
+                model = joblib.load('models.joblib')
         return model
     except FileNotFoundError:
         st.error("❌ Model file not found. Please check if models.joblib exists.")
