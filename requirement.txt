@@ -2,14 +2,3 @@ streamlit
 pandas
 numpy
 scikit-learn
-```
-
----
-
-## **Files structure:**
-```
-Global-Earthquake-App/
-├── app.py              (upar wala code)
-├── models.pkl          (aapki model file - Git LFS se upload)
-├── requirements.txt    (dependencies)
-└── .gitattributes      (Git LFS config)
