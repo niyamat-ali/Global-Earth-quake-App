@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from datetime import datetime
+import pickle
 
 # Page configuration
 st.set_page_config(
@@ -10,13 +11,13 @@ st.set_page_config(
     layout="wide"
 )
 
-# Load model - SIMPLE JOBLIB METHOD
 @st.cache_resource
 def load_model():
     try:
         with st.spinner('⏳ Loading model...'):
-            import joblib
-            model = joblib.load('models.pkl')
+            import pickle
+            with open("models.pkl", "rb") as f:
+                model = pickle.load(f)
         return model
     except FileNotFoundError:
         st.error("❌ Model file 'models.pkl' not found.")
