@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 from datetime import datetime
 
+
 # Page configuration
 st.set_page_config(
     page_title="Earthquake Magnitude Predictor",
@@ -10,20 +11,26 @@ st.set_page_config(
     layout="wide"
 )
 
-# Load model - USE JOBLIB DIRECTLY
 @st.cache_resource
 def load_model():
     try:
+        # Import sklearn first to ensure it's available
+        from sklearn.ensemble import RandomForestRegressor
+        import pickle
+        
         with st.spinner('⏳ Loading model...'):
-            import joblib
-            model = joblib.load('models.joblib')
-            return model
+            with open("models.pkl", "rb") as f:
+                model = pickle.load(f)
+        return model
+    except ImportError as ie:
+        st.error(f"❌ Missing library: {str(ie)}")
+        st.info("Install scikit-learn: pip install scikit-learn")
+        return None
     except FileNotFoundError:
-        st.error("❌ Model file 'models.joblib' not found in the repository.")
-        st.info("Please ensure models.joblib is uploaded to your GitHub repository.")
+        st.error("❌ Model file 'models.pkl' not found.")
         return None
     except Exception as e:
-        st.error(f"❌ Error loading model: {str(e)}")
+        st.error(f"❌ Error: {str(e)}")
         return None
 
 # Load model
