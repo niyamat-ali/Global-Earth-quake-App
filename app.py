@@ -14,11 +14,18 @@ st.set_page_config(
 @st.cache_resource
 def load_model():
     try:
+        # Import sklearn first to ensure it's available
+        from sklearn.ensemble import RandomForestRegressor
+        import pickle
+        
         with st.spinner('⏳ Loading model...'):
-            import pickle
             with open("models.pkl", "rb") as f:
                 model = pickle.load(f)
         return model
+    except ImportError as ie:
+        st.error(f"❌ Missing library: {str(ie)}")
+        st.info("Install scikit-learn: pip install scikit-learn")
+        return None
     except FileNotFoundError:
         st.error("❌ Model file 'models.pkl' not found.")
         return None
